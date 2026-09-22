@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Schedule Service</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="sidebar" aria-label="Панель расписания">
+        <div class="brand">
+          <span class="brand-mark">S</span>
+          <div>
+            <p class="eyebrow">Supabase schedule</p>
+            <h1>Расписание</h1>
+          </div>
+        </div>
+
+        <label class="field">
+          <span>Группа</span>
+          <select id="groupSelect" aria-label="Выберите группу"></select>
+        </label>
+
+        <div class="quick-actions" aria-label="Быстрые команды">
+          <button id="todayButton" class="primary-button" type="button">Сегодня</button>
+          <button id="nowButton" class="secondary-button" type="button">Сейчас</button>
+        </div>
+
+        <div class="status-panel">
+          <p class="eyebrow">Статус данных</p>
+          <p id="dataStatus">Загрузка...</p>
+        </div>
+      </section>
+
+      <section class="chat-panel" aria-label="Чат расписания">
+        <header class="chat-header">
+          <div>
+            <p class="eyebrow">Команды</p>
+            <h2>/today и /now</h2>
+          </div>
+          <span id="clock" class="clock">--:--</span>
+        </header>
+
+        <div id="messages" class="messages" aria-live="polite"></div>
+
+        <form id="commandForm" class="command-form">
+          <input id="commandInput" autocomplete="off" placeholder="Введите /today или /now" />
+          <button type="submit">Отправить</button>
+        </form>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
