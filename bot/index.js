@@ -94,15 +94,23 @@ async function loadSchedule(groupId) {
 
 async function sendGroupPicker(chatId) {
   const groups = await loadGroups();
+  
+  // Визуальное отличие: делаем кнопки по 2 в ряд
+  const keyboard = [];
+  for (let i = 0; i < groups.length; i += 2) {
+    const row = [];
+    row.push({ text: `🎓 ${groups[i].name}`, callback_data: `group:${groups[i].id}:${groups[i].name}` });
+    if (groups[i + 1]) {
+      row.push({ text: `🎓 ${groups[i + 1].name}`, callback_data: `group:${groups[i + 1].id}:${groups[i + 1].name}` });
+    }
+    keyboard.push(row);
+  }
 
   await telegram("sendMessage", {
     chat_id: chatId,
-    text: "Выберите группу:",
-    reply_markup: {
-      inline_keyboard: groups.map((group) => [
-        { text: group.name, callback_data: `group:${group.id}:${group.name}` }
-      ])
-    }
+    // Визуальное отличие: новый текст приветствия
+    text: "👋 Привет! Давай найдем твое расписание. Выбери свою группу из списка ниже:",
+    reply_markup: { inline_keyboard: keyboard }
   });
 }
 
@@ -112,7 +120,8 @@ async function answerCommand(chatId, command) {
   if (!group) {
     await telegram("sendMessage", {
       chat_id: chatId,
-      text: "Сначала выберите группу командой /start."
+      // Визуальное отличие: измененный текст ошибки
+      text: "⚠️ Ой, я пока не знаю твою группу. Нажми /start, чтобы выбрать её!"
     });
     await sendGroupPicker(chatId);
     return;
@@ -142,7 +151,8 @@ async function handleCallback(query) {
   await telegram("answerCallbackQuery", { callback_query_id: query.id });
   await telegram("sendMessage", {
     chat_id: query.message.chat.id,
-    text: `Группа ${group.name} выбрана. Команды: /today, /now.`
+    // Визуальное отличие: измененный текст подтверждения
+    text: `✅ Супер! Группа ${group.name} сохранена.\n\nДоступные команды:\n📅 /today — Пары на сегодня\n⏳ /now — Какая пара идет прямо сейчас`
   });
 }
 
@@ -161,7 +171,8 @@ async function handleMessage(message) {
 
   await telegram("sendMessage", {
     chat_id: message.chat.id,
-    text: "Команда не распознана. Доступны /start, /groups, /today и /now."
+    // Визуальное отличие: измененный текст-заглушка
+    text: "🤔 Не совсем понимаю. Попробуй использовать команды меню: /start, /today или /now."
   });
 }
 
@@ -189,5 +200,5 @@ async function poll() {
   }
 }
 
-console.log("Telegram bot started.");
+console.log("Duplicate v2 Telegram bot started.");
 poll();
